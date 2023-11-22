@@ -1,0 +1,125 @@
+﻿@using BlazorWithFluxor.Client.Store.Weather
+@using BlazorWithFluxor.Client.Store.Counter
+@using BlazorWithFluxor.Client.Store.Hubs
+
+@inherits FluxorComponent
+@inject IToastService ToastService
+@inject IActionSubscriber ActionSubscriber
+
+@code {
+    protected override void OnInitialized()
+    {
+        ActionSubscriber.SubscribeToAction<WeatherSetForecastsAction>(this, ShowWeatherToast);
+
+        ActionSubscriber.SubscribeToAction<WeatherLoadStateSuccessAction>(this, ShowWeatherLoadStateSuccessToast);
+        ActionSubscriber.SubscribeToAction<WeatherLoadStateFailureAction>(this, ShowWeatherLoadStateFailureToast);
+
+        ActionSubscriber.SubscribeToAction<WeatherPersistStateSuccessAction>(this, ShowWeatherPersistStateSuccessToast);
+        ActionSubscriber.SubscribeToAction<WeatherPersistStateFailureAction>(this, ShowWeatherPersistStateFailureToast);
+
+        ActionSubscriber.SubscribeToAction<WeatherClearStateSuccessAction>(this, ShowWeatherClearStateSuccessToast);
+        ActionSubscriber.SubscribeToAction<WeatherClearStateFailureAction>(this, ShowWeatherClearStateFailureToast);
+
+        ActionSubscriber.SubscribeToAction<CounterLoadStateSuccessAction>(this, ShowCounterLoadStateSuccessToast);
+        ActionSubscriber.SubscribeToAction<CounterLoadStateFailureAction>(this, ShowCounterLoadStateFailureToast);
+
+        ActionSubscriber.SubscribeToAction<CounterPersistStateSuccessAction>(this, ShowCounterPersistStateSuccessToast);
+        ActionSubscriber.SubscribeToAction<CounterPersistStateFailureAction>(this, ShowCounterPersistStateFailureToast);
+
+        ActionSubscriber.SubscribeToAction<CounterClearStateSuccessAction>(this, ShowCounterClearStateSuccessToast);
+        ActionSubscriber.SubscribeToAction<CounterClearStateFailureAction>(this, ShowCounterClearStateFailureToast);
+
+        ActionSubscriber.SubscribeToAction<CounterHubReceiveCountAction>(this, ShowCountReceivedToast);
+        ActionSubscriber.SubscribeToAction<CounterHubSendCountFailedAction>(this, ShowCountReceivedFailedToast);
+        ActionSubscriber.SubscribeToAction<CounterHubSetConnectedAction>(this, ShowHubConnectedToast);
+
+        base.OnInitialized();
+    }
+
+    private void ShowWeatherToast(WeatherSetForecastsAction action)
+    {
+        ToastService.ShowInfo("Weather Forecasts have been updated!");
+    }
+
+    private void ShowWeatherLoadStateSuccessToast(WeatherLoadStateSuccessAction action)
+    {
+        ToastService.ShowSuccess("WeatherState loaded!");
+    }
+
+    private void ShowWeatherLoadStateFailureToast(WeatherLoadStateFailureAction action)
+    {
+        ToastService.ShowError($"Error loading WeatherState: {action.ErrorMessage}");
+    }
+
+    private void ShowWeatherPersistStateSuccessToast(WeatherPersistStateSuccessAction action)
+    {
+        ToastService.ShowSuccess("WeatherState saved!");
+    }
+
+    private void ShowWeatherPersistStateFailureToast(WeatherPersistStateFailureAction action)
+    {
+        ToastService.ShowError($"Error loading WeatherState: {action.ErrorMessage}");
+    }
+
+    private void ShowWeatherClearStateSuccessToast(WeatherClearStateSuccessAction action)
+    {
+        ToastService.ShowSuccess("WeatherState cleared!");
+    }
+
+    private void ShowWeatherClearStateFailureToast(WeatherClearStateFailureAction action)
+    {
+        ToastService.ShowError($"Error clearing WeatherState: {action.ErrorMessage}");
+    }
+
+    private void ShowCounterLoadStateSuccessToast(CounterLoadStateSuccessAction action)
+    {
+        ToastService.ShowSuccess("CounterState loaded!");
+    }
+
+    private void ShowCounterLoadStateFailureToast(CounterLoadStateFailureAction action)
+    {
+        ToastService.ShowError($"Error loading CounterState: {action.ErrorMessage}");
+    }
+
+    private void ShowCounterPersistStateSuccessToast(CounterPersistStateSuccessAction action)
+    {
+        ToastService.ShowSuccess("CounterState saved!");
+    }
+
+    private void ShowCounterPersistStateFailureToast(CounterPersistStateFailureAction action)
+    {
+        ToastService.ShowError($"Error loading CounterState: {action.ErrorMessage}");
+    }
+
+    private void ShowCounterClearStateSuccessToast(CounterClearStateSuccessAction action)
+    {
+        ToastService.ShowSuccess("CounterState cleared!");
+    }
+
+    private void ShowCounterClearStateFailureToast(CounterClearStateFailureAction action)
+    {
+        ToastService.ShowError($"Error clearing CounterState: {action.ErrorMessage}");
+    }
+
+    private void ShowCountReceivedToast(CounterHubReceiveCountAction action)
+    {
+        ToastService.ShowInfo($"Count received: {action.Count}");
+    }
+
+    private void ShowCountReceivedFailedToast(CounterHubSendCountFailedAction action)
+    {
+        ToastService.ShowError($"Count could not be broadcast: {action.Message}");
+    }
+
+    private void ShowHubConnectedToast(CounterHubSetConnectedAction action)
+    {
+        if (action.Connected)
+        {
+            ToastService.ShowSuccess($"CounterHub connected!");
+        }
+        else
+        {
+            ToastService.ShowError($"CounterHub disconnected!");
+        }
+    }
+}

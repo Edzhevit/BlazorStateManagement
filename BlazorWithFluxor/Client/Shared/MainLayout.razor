@@ -1,0 +1,31 @@
+﻿@using BlazorWithFluxor.Client.Store.Hubs
+@inherits LayoutComponentBase
+
+@inject IDispatcher Dispatcher
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <div class="main">
+        <div class="top-row px-4">
+            <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+        </div>
+
+        <div class="content px-4">
+            @Body
+        </div>
+    </div>
+</div>
+<BlazoredToasts Position="ToastPosition.TopRight" Timeout="5" />
+<Toaster />
+<StateLoader />
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Dispatcher.Dispatch(new CounterHubStartAction());
+    }
+}
